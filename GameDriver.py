@@ -4,6 +4,7 @@
     If using this code please cite creator.
 
 '''
+from platform import node
 from Players import *
 import sys
 import OthelloBoard
@@ -90,12 +91,27 @@ class GameDriver:
 
 
 def main():
-    if(len(sys.argv)) != 3:
-        print("Usage: python3 GameDriver.py <player1 type> <player2 type>")
-        exit(1)
-    game = GameDriver(sys.argv[1], sys.argv[2], 4, 4)
-    game.run();
-    return 0
+    # if(len(sys.argv)) != 3:
+    #     print("Usage: python3 GameDriver.py <player1 type> <player2 type>")
+    #     exit(1)
+    # game = GameDriver(sys.argv[1], sys.argv[2], 4, 4)
+    # game.run();
+    # return 0
 
+    #let O be human, X be AI
+    myBoard = OthelloBoard.OthelloBoard(4, 4, 'O', 'X')
+    myBoard.initialize()
+    myBoard.display()
 
+    myAI = MinimaxPlayer('X')
+
+    bRoot = myAI.CompleteExpansion(OthelloNode(myBoard, [], 'X'), 'X')
+
+    for b in bRoot.nodes[0].nodes:
+        b.oBoard.display()
+
+    # n = OthelloNode(myBoard1, [myBoard2])
+    # root = OthelloNode(myBoard, [n] )
+
+    # root.nodes[0].nodes[0].display()
 main()
