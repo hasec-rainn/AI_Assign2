@@ -5,7 +5,9 @@
 
 '''
 
+from secrets import choice
 import OthelloBoard
+import operator
 
 class Player:
     def __init__(self, symbol):
@@ -43,6 +45,24 @@ class MinimaxPlayer(Player):
             self.oppSym = 'O'
         else:
             self.oppSym = 'X'
+        self.gameTree = None
+
+
+    def get_move(self, othelloBoard):
+        
+        rtNode = OthelloNode(othelloBoard,[], self.symbol, None)
+        self.CompleteExpansion(rtNode, self.symbol)
+
+        self.MiniMax(rtNode)
+    
+        choices = rtNode.nodes
+        
+        # for choice in choices:
+        #     choice.PrintSelf()
+
+        #input("test")
+        return max(choices).action
+
 
 
     #################################################################
@@ -103,21 +123,69 @@ class MinimaxPlayer(Player):
             for c in range(currState.cols):
                 if( currState.is_legal_move(c, r, pSymbol) ):
                     expandedSt.play_move(c, r, pSymbol) #create new state
-                    bnList.append(OthelloNode(expandedSt.cloneOBoard(), [], altSybmol))
+                    bnList.append(OthelloNode(expandedSt.cloneOBoard(), [], altSybmol, (c,r) ))
 
                     expandedSt = board.cloneOBoard() #revert to prev state
 
         return bnList
 
+    #################################################################
+    # Function: MiniMax
+    # Desc: Assigns values to each node in a completely expanded tree
+    #       of the game.
+    #       Does so recursively
+    #################################################################
+    def MiniMax(self, bdNode):
+        if(bdNode.nodes != []): #Go to leaves first to find base values
+            for node in bdNode.nodes:
+                self.MiniMax(node)
+        else:   #we're at a leaf node, which means node.value=utility
+            bdNode.value = bdNode.oBoard.count_score(self.symbol)
+            return
+        
+        #At this point, we can assume deeper nodes have their values
+        #(ie, each node in bdNodes.nodes has a value)
+        if (bdNode.turn == self.symbol):
+            #its the AI's turn: it wants to play (goto the next state)
+            #that maximizes its performance
+            bdNode.value = max(bdNode.nodes).value
+        else:
+            #its the human's turn: it wants to play (goto the next state)
+            #that minimizes the AI's performance
+            bdNode.value = min(bdNode.nodes).value
+        
+
+
                 
         
 
 class OthelloNode:
-    def __init__(self, board, nodes, turn):
+    def __init__(self, board, nodes, turn, action):
         self.turn = turn
         self.value = None
         self.oBoard = board
         self.nodes = nodes
+        self.action = action #the action that led to this state
+
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __le__(self, other):
+        return self.value <= other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
+    def __ge__(self, other):
+        return self.value >= other.value
 
     def AddNode(self,node):
         self.nodes.append(node)
+
+    def PrintSelf(self):
+        print("==========OthelloNode==========")
+        self.oBoard.display()
+        print("###Action:", self.action)
+        print("###Turn:", self.turn)
+        print("###Value:", self.value)
+        print("###number of children nodes:", len(self.nodes))

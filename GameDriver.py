@@ -42,6 +42,7 @@ class GameDriver:
     def process_move(self, curr_player, opponent):
         invalid_move = True
         while(invalid_move):
+            ##this is the all-important function that decides what a move will be
             (col, row) = curr_player.get_move(self.board)
             if( not self.board.is_legal_move(col, row, curr_player.symbol)):
                 print("Invalid move")
@@ -91,27 +92,24 @@ class GameDriver:
 
 
 def main():
-    # if(len(sys.argv)) != 3:
-    #     print("Usage: python3 GameDriver.py <player1 type> <player2 type>")
-    #     exit(1)
-    # game = GameDriver(sys.argv[1], sys.argv[2], 4, 4)
-    # game.run();
-    # return 0
+    if(len(sys.argv)) != 3:
+        print("Usage: python3 GameDriver.py <player1 type> <player2 type>")
+        exit(1)
+    game = GameDriver(sys.argv[1], sys.argv[2], 4, 4)
+    game.run();
+    return 0
 
-    #let O be human, X be AI
-    myBoard = OthelloBoard.OthelloBoard(4, 4, 'O', 'X')
-    myBoard.initialize()
-    myBoard.display()
+    # #let O be human, X be AI
+    # myBoard = OthelloBoard.OthelloBoard(4, 4, 'O', 'X')
+    # myBoard.initialize()
+    # myBoard.display()
 
-    myAI = MinimaxPlayer('X')
+    # myAI = MinimaxPlayer('X')
 
-    bRoot = myAI.CompleteExpansion(OthelloNode(myBoard, [], 'X'), 'X')
+    # bRoot = myAI.CompleteExpansion(OthelloNode(myBoard, [], 'X', (None, None)), 'X',)
 
-    for b in bRoot.nodes[0].nodes:
-        b.oBoard.display()
+    # myAI.MiniMax(bRoot)
 
-    # n = OthelloNode(myBoard1, [myBoard2])
-    # root = OthelloNode(myBoard, [n] )
-
-    # root.nodes[0].nodes[0].display()
+    # for b in bRoot.nodes[0].nodes[2].nodes[3].nodes[2].nodes[1].nodes[1].nodes[1].nodes[0].nodes[1].nodes[0].nodes:
+    #     b.PrintSelf()
 main()
