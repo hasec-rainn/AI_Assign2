@@ -4,7 +4,6 @@
     If using this code please cite creator.
 
 '''
-from platform import node
 from Players import *
 import sys
 import OthelloBoard

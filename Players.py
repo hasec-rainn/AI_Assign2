@@ -5,7 +5,6 @@
 
 '''
 
-from secrets import choice
 import OthelloBoard
 import operator
 
